@@ -1,5 +1,9 @@
 from pydantic import BaseModel, Field
-from langchain_ollama import ChatOllama
+import os
+from dotenv import load_dotenv
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
+
+load_dotenv()
 
 class SafetyCheck(BaseModel):
     is_crisis: bool = Field(description="True if the patient mentions self-harm, suicide, severe harm to others, or acute crisis.")
@@ -7,7 +11,11 @@ class SafetyCheck(BaseModel):
 
 def check_crisis_input(user_text: str) -> SafetyCheck:
     """Evaluates user input for crisis indicators using a low-temperature model."""
-    llm = ChatOllama(model="llama3.1", temperature=0.0)
+    llm = ChatNVIDIA(
+    model="meta/llama-3.1-70b-instruct",
+    nvidia_api_key=os.getenv("NVIDIA_API_KEY"),
+    temperature=0.0
+    )
     
     safety_prompt = (
         "You are an emergency triage validator. Analyze the following text strictly for any mention "

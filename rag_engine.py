@@ -1,9 +1,18 @@
 from langchain_community.vectorstores import Chroma
-from langchain_ollama import OllamaEmbeddings
+# from langchain_ollama import OllamaEmbeddings
 from langchain_core.tools import tool
+import os
+from dotenv import load_dotenv
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
+
+load_dotenv()
+
 
 # Initialize local embeddings
-embeddings = OllamaEmbeddings(model="nomic-embed-text")
+embeddings = NVIDIAEmbeddings(
+    model="nvidia/nv-embedqa-e5-v5",  # or "baai/bge-m3"
+    nvidia_api_key=os.getenv("NVIDIA_API_KEY")
+)
 
 # Setup Vector DB (You would pre-populate this with clinical documents in a real scenario)
 vector_db = Chroma(
