@@ -21,7 +21,8 @@ with st.sidebar:
     
     st.divider()
     st.markdown("### 🛠️ Connected Tools & Models")
-    st.markdown("- **Model:** `Ollama / llama3.1`")
+    # st.markdown("- **Model:** `Ollama / llama3.1`")
+    st.markdown("- **Model:** `NVIDIA NIM / Llama-3.1-70b-instruct`")
     st.markdown("- **Embeddings:** `nomic-embed-text`")
     st.markdown("- **Safety Gate:** Active Triage Filter")
     st.markdown("- **RAG DB:** ChromaDB (DSM-5 & APA Guidelines)")

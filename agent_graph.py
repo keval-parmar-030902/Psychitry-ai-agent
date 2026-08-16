@@ -4,13 +4,16 @@ from langgraph.graph import StateGraph, END, START
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
-from langchain_ollama import ChatOllama
+
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, ToolMessage
 
 # Import our custom modules
 from guardrails import check_crisis_input
 from rag_engine import search_clinical_guidelines
 from clinical_tools import compute_phq9_score
+import os
+from dotenv import load_dotenv
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
 
 # --- Configure Terminal Logging ---
 logging.basicConfig(
@@ -27,8 +30,18 @@ class AgentState(TypedDict):
     is_crisis: bool
 
 # 2. Setup LLM & Tools
+# Load environment variables (pulls your NVIDIA_API_KEY from .env)
+load_dotenv()
+
+# 2. Setup LLM & Tools
 tools = [search_clinical_guidelines, compute_phq9_score]
-llm = ChatOllama(model="llama3.1", temperature=0.2)
+
+# Initialize NVIDIA API model instead of Ollama
+llm = ChatNVIDIA(
+    model="meta/llama-3.1-70b-instruct", # Using Llama 3.1 70B via NVIDIA API
+    temperature=0.2,
+    nvidia_api_key=os.getenv("NVIDIA_API_KEY")
+)
 llm_with_tools = llm.bind_tools(tools)
 
 SYSTEM_PROMPT = """You are a compassionate, structured Clinical Psychiatric Intake Assistant working alongside a licensed psychiatrist.

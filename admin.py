@@ -1,7 +1,7 @@
 import os
 import tempfile
 import streamlit as st
-from langchain_community.document_loaders import PyPDFLoader
+from unity.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
